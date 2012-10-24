@@ -33,8 +33,8 @@ Examples
         server_aliases    => 'www.pigstuf.fr pigstuf.fr pigstuffr.net',
         server_ssl_port   => '443',
         server_web_port   => '80',
-        ssl_cert_key_path => '/tmp/shared/pigstufr.de.key',
-        ssl_cert_path     => '/tmp/shared/star.pigstufr.de.cert',
+        ssl_cert_key_path => '/tmp/shared/pigstuf.fr.key',
+        ssl_cert_path     => '/tmp/shared/star.pigstuf.fr.cert',
         user              => 'application'
       }
 
