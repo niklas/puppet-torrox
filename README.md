@@ -3,6 +3,30 @@ Puppet Torrox
 
 Deploy Rails applications the stachenblocken way.
 
+Dependencies
+============
+
+* rvm: git://github.com/blt04/puppet-rvm.git
+* apache: git://github.com/camptocamp/puppet-apache.git
+* puppetlabs stdlib: git://github.com/puppetlabs/puppetlabs-stdlib.git (is\_hash)
+
+Requirements
+============
+
+The following was left as an exercise for the admin, as there may be some
+customization wanted.
+
+* you must provide a class packages::apache
+* you must provide a class packages::cron
+* you must provide a class packages::logrotate
+* you mist provide a template for the apache vhost (see examples/)
+
+Installation
+------------
+
+    git submodule add git://github.com/niklas/puppet-torrox.git rails
+
+
 Examples
 --------
 
