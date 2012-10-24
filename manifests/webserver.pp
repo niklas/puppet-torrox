@@ -134,13 +134,16 @@ define rails::webserver(
     require => [ File[$ssl_cert_path], File[$ssl_cert_key_path] ],
     notify  => Service['apache2']
   }
-  exec { "a2ensite $app_name":
-    creates => "/etc/apache2/sites-enabled/$app_name",
-    require => [
-      File["/etc/apache2/sites-available/$app_name"],
-      Package['apache2'],
-      Rvm_system_ruby[$ruby_version]
-    ],
-    notify  => Service['apache2']
+
+  if $::rvm_installed == "true" {
+    exec { "a2ensite $app_name":
+      creates => "/etc/apache2/sites-enabled/$app_name",
+      require => [
+        File["/etc/apache2/sites-available/$app_name"],
+        Package['apache2'],
+        Rvm_system_ruby[$ruby_version]
+      ],
+      notify  => Service['apache2']
+    }
   }
 }
