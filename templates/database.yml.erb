@@ -1,0 +1,11 @@
+<%= rails_env %>:
+  adapter: <%= database_adapter %>
+  database: <%= database %>
+  encoding: utf8
+  reconnect: false
+  pool: 5
+  username: <%= database_user %>
+  password: '<%= database_password %>'
+  host: <%= database_host %>
+  port: <%= database_port %>
+
