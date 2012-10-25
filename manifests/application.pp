@@ -116,7 +116,7 @@ define rails::application(
       ensure  => link,
       target  => "$env_dir/releases/00000000000000",
       require => File["$env_dir/releases/00000000000000"],
-      replace => false
+      replace => false;
 
     "$env_dir/current/public":
       ensure  => directory,
