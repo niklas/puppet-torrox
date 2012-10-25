@@ -112,18 +112,19 @@ define rails::application(
       mode    => '0755',
       owner   => $user;
 
-    "$env_dir/releases/00000000000000/public":
-      ensure  => directory,
-      require => File["$env_dir/releases/00000000000000"],
-      group   => $user,
-      mode    => '0755',
-      owner   => $user;
-
     "$env_dir/current":
       ensure  => link,
       target  => "$env_dir/releases/00000000000000",
       require => File["$env_dir/releases/00000000000000"],
       replace => false
+
+    "$env_dir/current/public":
+      ensure  => directory,
+      require => File["$env_dir/current"],
+      group   => $user,
+      mode    => '0755',
+      replace => false,
+      owner   => $user;
 
   }
 }
