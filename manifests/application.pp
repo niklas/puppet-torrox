@@ -102,5 +102,28 @@ define rails::application(
       group   => 'root',
       mode    => '0755',
       require => [ Package['cron'], Exec["mkdir environment for ${app_name}-${rails_env}"] ];
+
+
+    # create a dummy release so we can symlink it as document root for apache
+    "$env_dir/releases/00000000000000":
+      ensure  => directory,
+      require => File["$env_dir/releases"],
+      group   => $user,
+      mode    => '0755',
+      owner   => $user;
+
+    "$env_dir/releases/00000000000000/public":
+      ensure  => directory,
+      require => File["$env_dir/releases/00000000000000"],
+      group   => $user,
+      mode    => '0755',
+      owner   => $user;
+
+    "$env_dir/current":
+      ensure  => link,
+      target  => "$env_dir/releases/00000000000000",
+      require => File["$env_dir/releases/00000000000000"],
+      replace => false
+
   }
 }

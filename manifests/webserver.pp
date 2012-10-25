@@ -141,7 +141,8 @@ define rails::webserver(
       require => [
         File["/etc/apache2/sites-available/$app_name"],
         Package['apache2'],
-        Rvm_system_ruby[$ruby_version]
+        Rvm_system_ruby[$ruby_version],
+        File[$document_root]
       ],
       notify  => Service['apache2']
     }
