@@ -24,7 +24,7 @@ customization wanted.
 Installation
 ------------
 
-    git submodule add git://github.com/niklas/puppet-torrox.git rails
+    git submodule add git://github.com/niklas/puppet-torrox.git modules/rails
 
 
 Examples
