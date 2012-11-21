@@ -64,11 +64,6 @@ define rails::webserver(
     $ssl_cert_path     = '/etc/ssl/certs/ssl-cert-snakeoil.pem',
     $vhost_template    = "${app_name}/apache.site.erb"
 ) {
-  if $deploy_to {
-  $current_path  = "$deploy_to/current"
-  $shared_path   = "$deploy_to/shared"
-  }
-
   include packages::apache
   include rails::webserver::ssl
   include rails::webserver::base
