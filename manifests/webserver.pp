@@ -20,6 +20,7 @@
 #     $server_name       = $name,
 #     $server_ssl_port   = '443',
 #     $server_web_port   = '80',
+#     $ssl_cert_bundle_path = false,
 #     $ssl_cert_key_path = '/etc/ssl/private/ssl-cert-snakeoil.key',
 #     $ssl_cert_path     = '/etc/ssl/certs/ssl-cert-snakeoil.pem',
 #     $vhost_template    = "${app_name}/apache.site.erb"
@@ -36,6 +37,7 @@
 #     $document_root
 #     $ssl_cert_path
 #     $ssl_cert_key_path
+#     $ssl_cert_bundle_path
 #     $listen_web
 #     $listen_ssl
 #
@@ -57,6 +59,7 @@ define rails::webserver(
     $server_name       = $name,
     $server_ssl_port   = '443',
     $server_web_port   = '80',
+    $ssl_cert_bundle_path = false,
     $ssl_cert_key_path = '/etc/ssl/private/ssl-cert-snakeoil.key',
     $ssl_cert_path     = '/etc/ssl/certs/ssl-cert-snakeoil.pem',
     $vhost_template    = "${app_name}/apache.site.erb"
@@ -105,6 +108,13 @@ define rails::webserver(
     $ssl_cert_key_path:
       ensure  => file,
       replace => false;
+  }
+
+  if $ssl_cert_bundle_path {
+    file { $ssl_cert_bundle_path:
+      ensure  => file,
+      replace => false;
+    }
   }
 
   # TODO this will not yet work as intended
