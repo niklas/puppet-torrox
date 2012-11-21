@@ -15,15 +15,15 @@
 #
 # Further Parameters:
 #
-#     $http_basic_auth   = { 'user1' => 'pass1', 'user2' => 'pass2' }
-#     $server_aliases    = 'example.org example.net',
-#     $server_name       = $name,
-#     $server_ssl_port   = '443',
-#     $server_web_port   = '80',
+#     $http_basic_auth      = { 'user1' => 'pass1', 'user2' => 'pass2' }
+#     $server_aliases       = 'example.org example.net',
+#     $server_name          = $name,
+#     $server_ssl_port      = '443',
+#     $server_web_port      = '80',
 #     $ssl_cert_bundle_path = false,
-#     $ssl_cert_key_path = '/etc/ssl/private/ssl-cert-snakeoil.key',
-#     $ssl_cert_path     = '/etc/ssl/certs/ssl-cert-snakeoil.pem',
-#     $vhost_template    = "${app_name}/apache.site.erb"
+#     $ssl_cert_key_path    = '/etc/ssl/private/ssl-cert-snakeoil.key',
+#     $ssl_cert_path        = '/etc/ssl/certs/ssl-cert-snakeoil.pem',
+#     $vhost_template       = "${app_name}/apache.site.erb"
 #
 # Intention:
 #
@@ -53,16 +53,16 @@ define rails::webserver(
     $ruby_version,
     $user,
 
-    $document_root     = "$deploy_to/current/public",
-    $http_basic_auth   = false,
-    $server_aliases    = false,
-    $server_name       = $name,
-    $server_ssl_port   = '443',
-    $server_web_port   = '80',
+    $document_root        = "$deploy_to/current/public",
+    $http_basic_auth      = false,
+    $server_aliases       = false,
+    $server_name          = $name,
+    $server_ssl_port      = '443',
+    $server_web_port      = '80',
     $ssl_cert_bundle_path = false,
-    $ssl_cert_key_path = '/etc/ssl/private/ssl-cert-snakeoil.key',
-    $ssl_cert_path     = '/etc/ssl/certs/ssl-cert-snakeoil.pem',
-    $vhost_template    = "${app_name}/apache.site.erb"
+    $ssl_cert_key_path    = '/etc/ssl/private/ssl-cert-snakeoil.key',
+    $ssl_cert_path        = '/etc/ssl/certs/ssl-cert-snakeoil.pem',
+    $vhost_template       = "${app_name}/apache.site.erb"
 ) {
   include packages::apache
   include rails::webserver::ssl
