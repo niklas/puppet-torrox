@@ -71,7 +71,7 @@ define rails::webserver(
   $passenger_version = '3.0.11'
 
   include rvm::passenger::apache::ubuntu::pre
-  if $::rvm_installed == "true" {
+  if $::rvm_installed == 'true' {
     if !defined(Class['rvm::passenger::apache::ubuntu::post']) {
       class { 'rvm::passenger::apache::ubuntu::post':
         version      => $passenger_version,
@@ -140,7 +140,7 @@ define rails::webserver(
     notify  => Service['apache2']
   }
 
-  if $::rvm_installed == "true" {
+  if $::rvm_installed == 'true' {
     exec { "a2ensite $app_name":
       creates => "/etc/apache2/sites-enabled/$app_name",
       require => [
