@@ -8,7 +8,7 @@ define rails::application(
   $database_password,
 
   $app_name          = $name,
-  $database          = "${app_name}_${rails_env}"
+  $database          = "${name}_${rails_env}"
 ) {
   $app_dir    = "/home/$user/projects/$app_name"
   $env_dir    = "$app_dir/$rails_env"
