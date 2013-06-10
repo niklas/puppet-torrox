@@ -29,7 +29,7 @@ define rails::webserver::basic_auth($user, $credentials = {}) {
 
   file { "${current_path}/public/.htaccess":
     ensure  => present,
-    content => template('apache/auth-basic-file-user.erb'),
+    content => template('rails/auth-basic-file-user.erb'),
     notify  => Service['apache2']
   }
 }
