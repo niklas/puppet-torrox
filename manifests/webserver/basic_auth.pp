@@ -1,5 +1,5 @@
 define rails::webserver::basic_auth($user, $credentials = {}) {
-  $password = $credentials[$user];
+  $password = $credentials[$user]
 
   apache::auth::htpasswd { "${user} on ${app_name} at ${server_name}":
     ensure           => 'present',
