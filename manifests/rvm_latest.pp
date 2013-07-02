@@ -10,8 +10,8 @@ class rails::rvm_latest {
     path    => '/etc/rvmrc',
     mode    => '0644',
     content => "umask g+w
-    rvm_trust_rvmrcs_flag=1
-    "
+rvm_trust_rvmrcs_flag=1
+rvm_auto_reload_flag=2"
   }
 
   # generate no docs for gems
