@@ -68,7 +68,7 @@ define rails::webserver(
   include rails::webserver::ssl
   include rails::webserver::base
 
-  $passenger_version = '3.0.11'
+  $passenger_version = '4.0.8'
 
   include rvm::passenger::apache::ubuntu::pre
   if $::rvm_installed == 'true' {
