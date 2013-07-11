@@ -20,6 +20,7 @@
 #     $server_name          = $name,
 #     $server_ssl_port      = '443',
 #     $server_web_port      = '80',
+#     $server_prefix        = '',
 #     $ssl_cert_bundle_path = false,
 #     $ssl_cert_key_path    = '/etc/ssl/private/ssl-cert-snakeoil.key',
 #     $ssl_cert_path        = '/etc/ssl/certs/ssl-cert-snakeoil.pem',
@@ -59,6 +60,7 @@ define rails::webserver(
     $server_name          = $name,
     $server_ssl_port      = '443',
     $server_web_port      = '80',
+    $server_prefix        = '',
     $ssl_cert_bundle_path = false,
     $ssl_cert_key_path    = '/etc/ssl/private/ssl-cert-snakeoil.key',
     $ssl_cert_path        = '/etc/ssl/certs/ssl-cert-snakeoil.pem',
@@ -69,6 +71,7 @@ define rails::webserver(
   include rails::webserver::base
 
   $passenger_version = '4.0.8'
+  $prefixed_app_name = "${server_prefix}${app_name}"
 
   include rvm::passenger::apache::ubuntu::pre
   if $::rvm_installed == 'true' {
@@ -133,7 +136,12 @@ define rails::webserver(
     default => "Listen $server_ssl_port",
   }
 
-  file { "/etc/apache2/sites-available/$app_name":
+  if $prefixed_app_name != $app_name {
+    file { "/etc/apache2/sites-available/$app_name":
+      ensure => absent;
+    }
+  }
+  file { "/etc/apache2/sites-available/$prefixed_app_name":
     ensure  => file,
     content => template($vhost_template),
     require => [ File[$ssl_cert_path], File[$ssl_cert_key_path] ],
@@ -141,10 +149,10 @@ define rails::webserver(
   }
 
   if $::rvm_installed == 'true' {
-    exec { "a2ensite $app_name":
-      creates => "/etc/apache2/sites-enabled/$app_name",
+    exec { "a2ensite $prefixed_app_name":
+      creates => "/etc/apache2/sites-enabled/$prefixed_app_name",
       require => [
-        File["/etc/apache2/sites-available/$app_name"],
+        File["/etc/apache2/sites-available/$prefixed_app_name"],
         Package['apache2'],
         Rvm_system_ruby[$ruby_version],
         File[$document_root]
