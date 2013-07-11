@@ -140,6 +140,11 @@ define rails::webserver(
     file { "/etc/apache2/sites-available/$app_name":
       ensure => absent;
     }
+    exec { "a2dissite $app_name":
+      onlyif  => "test -L /etc/apache2/sites-enabled/$app_name",
+      require => Package['apache2'],
+      notify  => Service['apache2']
+    }
   }
   file { "/etc/apache2/sites-available/$prefixed_app_name":
     ensure  => file,
