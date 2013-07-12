@@ -1,6 +1,6 @@
 class rails::rvm_latest {
   class { 'rvm':
-    version     => 'latest',
+    version     => 'present',
     install_rvm => true,
     require     => File['/etc/rvmrc']
   }
