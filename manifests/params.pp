@@ -10,6 +10,7 @@ class rails::params {
   $database_password = ''
   $ruby_version      = 'ruby-1.9.3-p0'
   $gemset            = 'rails'
+  $passenger_version = '4.0.8'
 
   # the deploy_to here does not work always due to variable scoping
   # it is, however, an example of our standard deploy_to

@@ -44,7 +44,6 @@
 #
 # ToDo:
 #
-#  - make the passenger_version configurable
 #  - make the passenger-variable configurable
 #
 define rails::webserver(
@@ -66,37 +65,10 @@ define rails::webserver(
     $ssl_cert_path        = '/etc/ssl/certs/ssl-cert-snakeoil.pem',
     $vhost_template       = "${app_name}/apache.site.erb"
 ) {
-  include packages::apache
   include rails::webserver::ssl
   include rails::webserver::base
 
-  $passenger_version = '4.0.8'
   $prefixed_app_name = "${server_prefix}${app_name}"
-
-  include rvm::passenger::apache::ubuntu::pre
-  if $::rvm_installed == 'true' {
-    if !defined(Class['rvm::passenger::apache::ubuntu::post']) {
-      class { 'rvm::passenger::apache::ubuntu::post':
-        version      => $passenger_version,
-        ruby_version => $ruby_version,
-        gempath      => "/usr/local/rvm/gems/${ruby_version}/gems",
-        binpath      => '/usr/local/rvm/bin/'
-      }
-    }
-
-    if !defined(Class['rvm::passenger::apache']) {
-      class { 'rvm::passenger::apache':
-        version            => $passenger_version,
-        ruby_version       => $ruby_version,
-        require            => [ Rvm_system_ruby[$ruby_version], Service['apache2'] ],
-        mininstances       => '1',
-        maxinstancesperapp => '5',
-        maxpoolsize        => '10',
-        poolidletime       => '300',
-        spawnmethod        => 'smart-lv2';
-      }
-    }
-  }
 
   file {
     $ssl_cert_path:
@@ -160,6 +132,7 @@ define rails::webserver(
         File["/etc/apache2/sites-available/$prefixed_app_name"],
         Package['apache2'],
         Rvm_system_ruby[$ruby_version],
+        Rails::Passenger[$ruby_version],
         File[$document_root]
       ],
       notify  => Service['apache2']
