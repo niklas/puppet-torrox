@@ -70,14 +70,14 @@ define rails::webserver(
 
   $prefixed_app_name = "${server_prefix}${app_name}"
 
-  if !defined($ssl_cert_path) {
+  if !defined(File[$ssl_cert_path]) {
     file { $ssl_cert_path:
       ensure  => file,
       replace => false;
     }
   }
 
-  if !defined($ssl_cert_key_path) {
+  if !defined(File[$ssl_cert_key_path]) {
     file { $ssl_cert_key_path:
       ensure  => file,
       replace => false;
@@ -85,7 +85,7 @@ define rails::webserver(
   }
 
   if $ssl_cert_bundle_path {
-    if !defined($ssl_cert_bundle_path) {
+    if !defined(File[$ssl_cert_bundle_path]) {
       file { $ssl_cert_bundle_path:
         ensure  => file,
         replace => false;
