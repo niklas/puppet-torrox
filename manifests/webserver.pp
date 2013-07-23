@@ -132,7 +132,7 @@ define rails::webserver(
         File["/etc/apache2/sites-available/$prefixed_app_name"],
         Package['apache2'],
         Rvm_system_ruby[$ruby_version],
-        Rails::Passenger[$ruby_version],
+        Class['rvm::passenger::apache'],
         File[$document_root]
       ],
       notify  => Service['apache2']
