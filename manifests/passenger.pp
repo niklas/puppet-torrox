@@ -5,9 +5,6 @@ define rails::passenger(
   $ruby_version = $title,
   $passenger_version = $rails::params::passenger_version
 ) {
-  include rvm::dependencies::ubuntu
-  include rvm::passenger::apache::ubuntu::pre
-
   if $::rvm_installed == 'true' {
     class { 'rvm::passenger::apache':
       version            => $passenger_version,
@@ -32,4 +29,11 @@ define rails::passenger(
         hasstatus  => true;
     }
   }
+  if !defined(Package['apache2'])              { package { 'apache2':              ensure => present } }
+  if !defined(Package['libcurl4-openssl-dev']) { package { 'libcurl4-openssl-dev': ensure => present } }
+}
+
+class rails::rvm_deps {
+  include rvm::dependencies::ubuntu
+  include rvm::passenger::apache::ubuntu::pre
 }
