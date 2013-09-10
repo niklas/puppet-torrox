@@ -131,7 +131,7 @@ define rails::webserver(
     notify  => Service['apache2']
   }
 
-  if $::rvm_installed == 'true' {
+  if "$::rvm_installed" == 'true' {
     exec { "a2ensite $prefixed_app_name":
       creates => "/etc/apache2/sites-enabled/$prefixed_app_name",
       require => [

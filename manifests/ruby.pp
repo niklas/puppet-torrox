@@ -24,7 +24,7 @@ define rails::ruby(
     rvm::system_user { $user: }
   }
 
-  if $::rvm_installed == 'true' {
+  if "$::rvm_installed" == 'true' {
     if $ruby_full == $ruby_version {
       rvm_gem { "$ruby_version/bundler":
         ensure  => $bundler_version,

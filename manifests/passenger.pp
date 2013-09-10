@@ -5,7 +5,7 @@ define rails::passenger(
   $ruby_version = $title,
   $passenger_version = $rails::params::passenger_version
 ) {
-  if $::rvm_installed == 'true' {
+  if "$::rvm_installed" == 'true' {
     class { 'rvm::passenger::apache':
       version            => $passenger_version,
       ruby_version       => $ruby_version,
