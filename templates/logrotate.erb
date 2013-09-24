@@ -1,4 +1,4 @@
-/home/application/projects/<%= @app_name %>/<%= @rails_env %>/shared/log/*.log {
+/home/<%= @user %>/projects/<%= @app_name %>/<%= @rails_env %>/shared/log/*.log {
   daily
   compress
   copytruncate
@@ -6,6 +6,6 @@
   delaycompress
   missingok
   notifempty
-  olddir /home/application/projects/<%= @app_name %>/<%= @rails_env %>/shared/log/rotated
+  olddir /home/<%= @user %>/projects/<%= @app_name %>/<%= @rails_env %>/shared/log/rotated
   rotate 99
 }
