@@ -58,6 +58,13 @@ define rails::application(
       mode    => '0755',
       owner   => $user;
 
+    "$shared_dir/uploads":
+      ensure  => directory,
+      require => File[$shared_dir],
+      group   => $user,
+      mode    => '0755',
+      owner   => $user;
+
     "$env_dir/releases":
       ensure  => directory,
       require => Exec["mkdir environment for ${app_name}-${rails_env}"],
