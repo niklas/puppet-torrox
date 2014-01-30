@@ -1,5 +1,5 @@
 define rails::rvm($user, $ruby_version, $default_use = true) {
-  include rails::rvm_latest
+  include rails::rvm_version  # defaults to latest rvm
 
   if "$::rvm_installed" == 'true' {
     rvm_system_ruby { $ruby_version:
