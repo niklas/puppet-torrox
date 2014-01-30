@@ -1,10 +1,13 @@
 define rails::rvm($user, $ruby_version, $default_use = true) {
-  include rails::rvm_latest
+  if !defined(Class['rails::rvm_version']) {
+    include rails::rvm_version  # default to latest rvm
+  }
 
   if "$::rvm_installed" == 'true' {
     rvm_system_ruby { $ruby_version:
       ensure      => 'present',
-      default_use => $default_use;
+      default_use => $default_use,
+      require     => Class['rails::rvm_version'],  # we need *some* version installed
     }
 
     if $default_use {
@@ -15,7 +18,7 @@ define rails::rvm($user, $ruby_version, $default_use = true) {
         owner   => 'root',
         group   => 'rvm',
         mode    => '0664',
-        content => "default=$ruby_version"
+        content => "default=$ruby_version",
       }
     }
   }
