@@ -37,6 +37,13 @@ define rails::application(
   }
 
   file {
+    $env_dir:
+      ensure  => directory,
+      require => Exec["mkdir environment for ${app_name}-${rails_env}"],
+      group   => $user,
+      mode    => '0755',
+      owner   => $user;
+
     $shared_dir:
       ensure  => directory,
       require => Exec["mkdir environment for ${app_name}-${rails_env}"],
@@ -121,6 +128,8 @@ define rails::application(
 
     "$env_dir/current":
       ensure  => link,
+      group   => $user,
+      owner   => $user,
       target  => "$env_dir/releases/00000000000000",
       require => File["$env_dir/releases/00000000000000"],
       replace => false;
