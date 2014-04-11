@@ -2,18 +2,22 @@
 #
 #
 define rails::passenger(
-  $ruby_version = $title,
-  $passenger_version = $rails::params::passenger_version
+  $ruby_version       = $title,
+  $passenger_version  = $rails::params::passenger_version,
+  $mininstances       = '1',
+  $maxinstancesperapp = '5',
+  $maxpoolsize        = '10',
+  $poolidletime       = '300',
 ) {
   if "$::rvm_installed" == 'true' {
     class { 'rvm::passenger::apache':
       version            => $passenger_version,
       ruby_version       => $ruby_version,
       require            => [ Rvm_system_ruby[$ruby_version], Service['apache2'] ],
-      mininstances       => '1',
-      maxinstancesperapp => '5',
-      maxpoolsize        => '10',
-      poolidletime       => '300',
+      mininstances       => $mininstances,
+      maxinstancesperapp => $maxinstancesperapp,
+      maxpoolsize        => $maxpoolsize,
+      poolidletime       => $poolidletime,
       spawnmethod        => 'smart-lv2';
     }
   }
