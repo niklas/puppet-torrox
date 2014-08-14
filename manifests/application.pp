@@ -7,6 +7,8 @@ define rails::application(
   $database_user,
   $database_password,
 
+  $create_uploads    = true,
+
   $app_name          = $name,
   $database          = "${name}_${rails_env}"
 ) {
@@ -59,13 +61,6 @@ define rails::application(
       owner   => $user;
 
     "$shared_dir/system":
-      ensure  => directory,
-      require => File[$shared_dir],
-      group   => $user,
-      mode    => '0755',
-      owner   => $user;
-
-    "$shared_dir/uploads":
       ensure  => directory,
       require => File[$shared_dir],
       group   => $user,
@@ -141,5 +136,16 @@ define rails::application(
       replace => false,
       owner   => $user;
 
+  }
+
+  if ($create_uploads) {
+    file {
+      "$shared_dir/uploads":
+        ensure  => directory,
+        require => File[$shared_dir],
+        group   => $user,
+        mode    => '0755',
+        owner   => $user;
+    }
   }
 }
