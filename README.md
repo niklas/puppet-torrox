@@ -79,3 +79,5 @@ FAQ
 ---
 
 What the frak is 'torrox'? -- it is the next big town next to capistrano.
+
+Okay, but… WTF? -- This module sets up a directory structure suitable for capistrano-depployments.
