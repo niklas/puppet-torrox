@@ -17,15 +17,18 @@ define rails::application(
   $shared_dir = "$env_dir/shared"
 
   include packages::cron
-  include packages::logrotate
 
-  file { "/etc/logrotate.d/${app_name}-${rails_env}":
-    ensure  => present,
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
-    require => Package['logrotate'],
-    content => template('rails/logrotate.erb');
+  logrotate::rule { "${app_name}-${rails_env}":
+    path          => "/home/${user}/projects/${app_name}/${rails_env}/shared/log/*.log",
+    rotate        => 99,
+    rotate_every  => 'day',
+    compress      => true,
+    copytruncate  => true,
+    dateext       => true,
+    delaycompress => true,
+    missingok     => true,
+    ifempty       => false,
+    olddir        => "/home/${user}/projects/${app_name}/${rails_env}/shared/log/rotated",
   }
 
   exec {

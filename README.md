@@ -18,7 +18,7 @@ customization wanted.
 
 * you must provide a class packages::apache
 * you must provide a class packages::cron
-* you must provide a class packages::logrotate
+* you must provide a class logrotate::rule (e.g. rodjek/logrotate)
 * you must provide a template for the apache vhost (see examples/)
 
 Installation
