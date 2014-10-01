@@ -13,13 +13,12 @@ define rails::application(
   $database          = "${name}_${rails_env}",
   $deploy_to         = "/home/$user/projects/$name/$rails_env"
 ) {
-  $env_dir    = $deploy_to
-  $shared_dir = "$env_dir/shared"
+  $shared_dir = "$deploy_to/shared"
 
   include packages::cron
 
   logrotate::rule { "${app_name}-${rails_env}":
-    path          => "${env_dir}/shared/log/*.log",
+    path          => "${deploy_to}/shared/log/*.log",
     rotate        => 99,
     rotate_every  => 'day',
     compress      => true,
@@ -28,21 +27,21 @@ define rails::application(
     delaycompress => true,
     missingok     => true,
     ifempty       => false,
-    olddir        => "${env_dir}/shared/log/rotated",
+    olddir        => "${deploy_to}/shared/log/rotated",
   }
 
   exec {
     "mkdir environment for ${app_name}-${rails_env}":
-      command => "mkdir -p $env_dir",
+      command => "mkdir -p $deploy_to",
       require => User[$user],
       path    => '/bin:/usr/bin',
       group   => $user,
       user    => $user,
-      creates => $env_dir;
+      creates => $deploy_to;
   }
 
   file {
-    $env_dir:
+    $deploy_to:
       ensure  => directory,
       require => Exec["mkdir environment for ${app_name}-${rails_env}"],
       group   => $user,
@@ -70,7 +69,7 @@ define rails::application(
       mode    => '0755',
       owner   => $user;
 
-    "$env_dir/releases":
+    "$deploy_to/releases":
       ensure  => directory,
       require => Exec["mkdir environment for ${app_name}-${rails_env}"],
       group   => $user,
@@ -116,24 +115,24 @@ define rails::application(
       require => [ Package['cron'], Exec["mkdir environment for ${app_name}-${rails_env}"] ];
 
     # create a dummy release so we can symlink it as document root for apache
-    "$env_dir/releases/00000000000000":
+    "$deploy_to/releases/00000000000000":
       ensure  => directory,
-      require => File["$env_dir/releases"],
+      require => File["$deploy_to/releases"],
       group   => $user,
       mode    => '0755',
       owner   => $user;
 
-    "$env_dir/current":
+    "$deploy_to/current":
       ensure  => link,
       group   => $user,
       owner   => $user,
-      target  => "$env_dir/releases/00000000000000",
-      require => File["$env_dir/releases/00000000000000"],
+      target  => "$deploy_to/releases/00000000000000",
+      require => File["$deploy_to/releases/00000000000000"],
       replace => false;
 
-    "$env_dir/current/public":
+    "$deploy_to/current/public":
       ensure  => directory,
-      require => File["$env_dir/current"],
+      require => File["$deploy_to/current"],
       group   => $user,
       mode    => '0755',
       replace => false,
