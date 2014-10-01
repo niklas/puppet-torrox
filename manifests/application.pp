@@ -138,7 +138,6 @@ define rails::application(
       mode    => '0755',
       replace => false,
       owner   => $user;
-
   }
 
   if ($create_uploads) {
