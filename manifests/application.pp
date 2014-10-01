@@ -10,16 +10,16 @@ define rails::application(
   $create_uploads    = true,
 
   $app_name          = $name,
-  $database          = "${name}_${rails_env}"
+  $database          = "${name}_${rails_env}",
+  $deploy_to         = "/home/$user/projects/$name/$rails_env"
 ) {
-  $app_dir    = "/home/$user/projects/$app_name"
-  $env_dir    = "$app_dir/$rails_env"
+  $env_dir    = $deploy_to
   $shared_dir = "$env_dir/shared"
 
   include packages::cron
 
   logrotate::rule { "${app_name}-${rails_env}":
-    path          => "/home/${user}/projects/${app_name}/${rails_env}/shared/log/*.log",
+    path          => "${env_dir}/shared/log/*.log",
     rotate        => 99,
     rotate_every  => 'day',
     compress      => true,
@@ -28,7 +28,7 @@ define rails::application(
     delaycompress => true,
     missingok     => true,
     ifempty       => false,
-    olddir        => "/home/${user}/projects/${app_name}/${rails_env}/shared/log/rotated",
+    olddir        => "${env_dir}/shared/log/rotated",
   }
 
   exec {
