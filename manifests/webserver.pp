@@ -115,27 +115,29 @@ define rails::webserver(
   }
 
   if $prefixed_app_name != $app_name {
-    file { "/etc/apache2/sites-available/$app_name":
-      ensure => absent;
-    }
+    file { "/etc/apache2/sites-available/{$app_name}.conf": ensure => absent; }
+    file { "/etc/apache2/sites-available/{$app_name}": ensure => absent; }
     exec { "a2dissite $app_name":
       onlyif  => "test -L /etc/apache2/sites-enabled/$app_name",
       require => Package['apache2'],
       notify  => Service['apache2']
     }
   }
-  file { "/etc/apache2/sites-available/$prefixed_app_name":
+  file { "/etc/apache2/sites-available/${prefixed_app_name}.conf":
     ensure  => file,
     content => template($vhost_template),
     require => [ File[$ssl_cert_path], File[$ssl_cert_key_path] ],
     notify  => Service['apache2']
   }
 
+  # apache wants sites ending in .conf now. make sure the old files do not keep around
+  file { "/etc/apache2/sites-available/${prefixed_app_name}": ensure  => absent; }
+
   if "$::rvm_installed" == 'true' {
     exec { "a2ensite $prefixed_app_name":
-      creates => "/etc/apache2/sites-enabled/$prefixed_app_name",
+      creates => "/etc/apache2/sites-enabled/${prefixed_app_name}.conf",
       require => [
-        File["/etc/apache2/sites-available/$prefixed_app_name"],
+        File["/etc/apache2/sites-available/${prefixed_app_name}.conf"],
         Package['apache2'],
         Rvm_system_ruby[$ruby_version],
         File[$document_root],
