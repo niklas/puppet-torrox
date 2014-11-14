@@ -32,11 +32,10 @@ define rails::application(
 
   exec {
     "mkdir environment for ${app_name}-${rails_env}":
-      command => "mkdir -p $deploy_to",
+      command => "mkdir -p ${deploy_to} && chown -R ${user} ${deploy_to}",
       require => User[$user],
       path    => '/bin:/usr/bin',
-      group   => $user,
-      user    => $user,
+      user    => 'root',
       creates => $deploy_to;
   }
 
