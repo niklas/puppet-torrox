@@ -8,4 +8,5 @@ fixtures:
       ref: "d3ca734"
   symlinks:
     apache: "#{source_dir}/../apache"
+    logrotate: "#{source_dir}/../logrotate"
     packages: "#{source_dir}/../packages"
