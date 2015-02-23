@@ -1,0 +1,11 @@
+fixtures:
+  repositories:
+    stdlib:
+      repo: "git://github.com/puppetlabs/puppetlabs-stdlib.git"
+      ref: "1ffd72d"
+    rvm:
+      repo: "git://github.com/kronn/puppet-rvm.git"
+      ref: "d3ca734"
+  symlinks:
+    apache: "#{source_dir}/../apache"
+    packages: "#{source_dir}/../packages"
