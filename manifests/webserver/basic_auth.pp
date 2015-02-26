@@ -7,7 +7,7 @@ define rails::webserver::basic_auth($user, $credentials = {}) {
     userFileName     => '.htpasswd',
     username         => $user,
     clearPassword    => $password,
-    require          => File["$current_path/public/.htaccess"]
+    require          => File["${current_path}/public/.htaccess"]
   }
 
   # <Location <%= location %>>
@@ -19,7 +19,7 @@ define rails::webserver::basic_auth($user, $credentials = {}) {
   # </Location>
   $location      = '/'
   $_authname      = 'Protected Area'
-  $_authUserFile = "$shared_path/.htpasswd"
+  $_authUserFile = "${shared_path}/.htpasswd"
   $_users        = 'valid-user'
 
   file { "${shared_path}/.htpasswd":
