@@ -115,8 +115,8 @@ define rails::webserver(
   }
 
   if $prefixed_app_name != $app_name {
-    file { "/etc/apache2/sites-available/{$app_name}.conf": ensure => absent; }
-    file { "/etc/apache2/sites-available/{$app_name}": ensure => absent; }
+    file { "/etc/apache2/sites-available/${app_name}.conf": ensure => absent; }
+    file { "/etc/apache2/sites-available/${app_name}": ensure => absent; }
     exec { "a2dissite $app_name":
       onlyif  => "test -L /etc/apache2/sites-enabled/$app_name",
       require => Package['apache2'],
