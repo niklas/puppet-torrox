@@ -33,8 +33,6 @@ describe 'rails::webserver' do
         with_content(%r!VirtualHost \*:443!).
         with_content(%r!^  ErrorDocument 503 .system.maintenance.html!).
         with_content(%r!^  RewriteCond %.DOCUMENT_ROOT..system.maintenance.html -l!)
-
-      should contain_exec('a2ensite rails-store')
     end
 
     it 'creates the vhost without prefix' do
@@ -44,13 +42,15 @@ describe 'rails::webserver' do
 
       should contain_file('/etc/apache2/sites-available/rails-store.conf').
         with_ensure('file')
-
-      should contain_exec('a2ensite rails-store')
     end
 
     it 'integrates with apache' do
       should contain_exec('a2dissite default')
       should contain_exec('a2enmod ssl')
+    end
+
+    it 'activates the vhost' do
+      should contain_exec('a2ensite rails-store')
     end
   end
 
@@ -86,8 +86,6 @@ describe 'rails::webserver' do
     it 'handles the prefixed file' do
       should contain_file('/etc/apache2/sites-available/00-rails-store.conf').
         with_ensure("file")
-
-      should contain_exec('a2ensite 00-rails-store')
     end
 
     it 'supports changing from the non-prefixed version' do
@@ -95,6 +93,10 @@ describe 'rails::webserver' do
         with_ensure("absent")
 
       should_not contain_exec('a2ensite rails-store')
+    end
+
+    it 'activates the vhost' do
+      should contain_exec('a2ensite 00-rails-store')
     end
   end
 end
