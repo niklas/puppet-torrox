@@ -7,7 +7,7 @@ if ENV['CI_GENERATE_REPORTS'] == 'true'
     setup_spec_opts("--format", "documentation")
   end
 
-  task :spec => :setup_ci_reporter
+  task :spec_standalone => :setup_ci_reporter
 end
 
 if ENV['CI_CLEANUP_REPORTS'] == 'true'
