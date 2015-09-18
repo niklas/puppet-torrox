@@ -53,7 +53,7 @@ define rails::webserver(
     $ruby_version,
     $user,
 
-    $document_root        = "$deploy_to/current/public",
+    $document_root        = "${deploy_to}/current/public",
     $http_basic_auth      = false,
     $server_aliases       = false,
     $server_name          = $name,
@@ -107,18 +107,18 @@ define rails::webserver(
   }
   $listen_web = $server_web_port ? {
     80      => '',
-    default => "Listen $server_web_port",
+    default => "Listen ${server_web_port}",
   }
   $listen_ssl = $server_ssl_port ? {
     443     => '',
-    default => "Listen $server_ssl_port",
+    default => "Listen ${server_ssl_port}",
   }
 
   if $prefixed_app_name != $app_name {
     file { "/etc/apache2/sites-available/${app_name}.conf": ensure => absent; }
     file { "/etc/apache2/sites-available/${app_name}": ensure => absent; }
-    exec { "a2dissite $app_name":
-      onlyif  => "test -L /etc/apache2/sites-enabled/$app_name",
+    exec { "a2dissite ${app_name}":
+      onlyif  => "test -L /etc/apache2/sites-enabled/${app_name}",
       require => Package['apache2'],
       notify  => Service['apache2']
     }
@@ -134,7 +134,7 @@ define rails::webserver(
   file { "/etc/apache2/sites-available/${prefixed_app_name}": ensure  => absent; }
 
   if "$::rvm_installed" == 'true' {
-    exec { "a2ensite $prefixed_app_name":
+    exec { "a2ensite ${prefixed_app_name}":
       creates => "/etc/apache2/sites-enabled/${prefixed_app_name}.conf",
       require => [
         File["/etc/apache2/sites-available/${prefixed_app_name}.conf"],

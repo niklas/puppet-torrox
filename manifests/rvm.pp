@@ -18,7 +18,7 @@ define rails::rvm($user, $ruby_version, $default_use = true) {
         owner   => 'root',
         group   => 'rvm',
         mode    => '0664',
-        content => "default=$ruby_version",
+        content => "default=${ruby_version}",
       }
     }
   }

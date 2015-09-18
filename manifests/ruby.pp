@@ -8,7 +8,7 @@ define rails::ruby(
   if $gemset == 'false' or $gemset == false {
     $ruby_full = $ruby_version
   } else {
-    $ruby_full = "$ruby_version@$gemset"
+    $ruby_full = "${ruby_version}@${gemset}"
   }
 
   # if !defined(Rvm_system_ruby[$ruby_version]) {
@@ -26,7 +26,7 @@ define rails::ruby(
 
   if "$::rvm_installed" == 'true' {
     if $ruby_full == $ruby_version {
-      rvm_gem { "$ruby_version/bundler":
+      rvm_gem { "${ruby_version}/bundler":
         ensure  => $bundler_version,
         require => Rvm_system_ruby[$ruby_version];
       }
@@ -35,7 +35,7 @@ define rails::ruby(
         ensure  => present,
         require => Rvm_system_ruby[$ruby_version];
       }
-      rvm_gem { "$ruby_full/bundler":
+      rvm_gem { "${ruby_full}/bundler":
         ensure  => $bundler_version,
         require => Rvm_gemset[$ruby_full];
       }

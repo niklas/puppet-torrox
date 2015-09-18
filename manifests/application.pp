@@ -11,9 +11,9 @@ define rails::application(
 
   $app_name          = $name,
   $database          = "${name}_${rails_env}",
-  $deploy_to         = "/home/$user/projects/$name/$rails_env"
+  $deploy_to         = "/home/${user}/projects/${name}/${rails_env}"
 ) {
-  $shared_dir = "$deploy_to/shared"
+  $shared_dir = "${deploy_to}/shared"
 
   include packages::cron
 
@@ -54,84 +54,84 @@ define rails::application(
       mode    => '0755',
       owner   => $user;
 
-    "$shared_dir/config":
+    "${shared_dir}/config":
       ensure  => directory,
       require => File[$shared_dir],
       group   => $user,
       mode    => '0755',
       owner   => $user;
 
-    "$shared_dir/system":
+    "${shared_dir}/system":
       ensure  => directory,
       require => File[$shared_dir],
       group   => $user,
       mode    => '0755',
       owner   => $user;
 
-    "$deploy_to/releases":
+    "${deploy_to}/releases":
       ensure  => directory,
       require => Exec["mkdir environment for ${app_name}-${rails_env}"],
       group   => $user,
       mode    => '0755',
       owner   => $user;
 
-    "$shared_dir/log":
+    "${shared_dir}/log":
       ensure  => directory,
       require => File[$shared_dir],
       group   => $user,
       mode    => '0755',
       owner   => $user;
 
-    "$shared_dir/log/rotated":
+    "${shared_dir}/log/rotated":
       ensure  => directory,
       require => File[$shared_dir],
       group   => $user,
       mode    => '0755',
       owner   => $user;
 
-    "$shared_dir/log/$rails_env.log":
+    "${shared_dir}/log/${rails_env}.log":
       ensure  => file,
-      require => File["$shared_dir/log"],
+      require => File["${shared_dir}/log"],
       group   => $user,
       mode    => '0666',
       owner   => $user;
 
-    "$shared_dir/config/database.yml":
+    "${shared_dir}/config/database.yml":
       ensure  => file,
-      require => File["$shared_dir/config"],
+      require => File["${shared_dir}/config"],
       content => template('rails/database.yml.erb'),
       group   => $user,
       mode    => '0644',
       replace => false,
       owner   => $user;
 
-    "run-dir for $user of $app_name":
+    "run-dir for ${user} of ${app_name}":
       ensure  => directory,
-      path    => "$shared_dir/pids",
+      path    => "${shared_dir}/pids",
       owner   => $user,
       group   => 'root',
       mode    => '0755',
       require => [ Package['cron'], Exec["mkdir environment for ${app_name}-${rails_env}"] ];
 
     # create a dummy release so we can symlink it as document root for apache
-    "$deploy_to/releases/00000000000000":
+    "${deploy_to}/releases/00000000000000":
       ensure  => directory,
-      require => File["$deploy_to/releases"],
+      require => File["${deploy_to}/releases"],
       group   => $user,
       mode    => '0755',
       owner   => $user;
 
-    "$deploy_to/current":
+    "${deploy_to}/current":
       ensure  => link,
       group   => $user,
       owner   => $user,
-      target  => "$deploy_to/releases/00000000000000",
-      require => File["$deploy_to/releases/00000000000000"],
+      target  => "${deploy_to}/releases/00000000000000",
+      require => File["${deploy_to}/releases/00000000000000"],
       replace => false;
 
-    "$deploy_to/current/public":
+    "${deploy_to}/current/public":
       ensure  => directory,
-      require => File["$deploy_to/current"],
+      require => File["${deploy_to}/current"],
       group   => $user,
       mode    => '0755',
       replace => false,
@@ -140,7 +140,7 @@ define rails::application(
 
   if ($create_uploads) {
     file {
-      "$shared_dir/uploads":
+      "${shared_dir}/uploads":
         ensure  => directory,
         require => File[$shared_dir],
         group   => $user,
