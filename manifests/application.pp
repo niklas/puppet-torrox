@@ -11,7 +11,8 @@ define rails::application(
 
   $app_name          = $name,
   $database          = "${name}_${rails_env}",
-  $deploy_to         = "/home/${user}/projects/${name}/${rails_env}"
+  $deploy_to         = "/home/${user}/projects/${name}/${rails_env}",
+  $capistrano_version = 2,
 ) {
   $shared_dir = "${deploy_to}/shared"
 
@@ -140,6 +141,32 @@ define rails::application(
           group   => 'root',
           mode    => '0755',
           require => [ Package['cron'], Exec["mkdir environment for ${app_name}-${rails_env}"] ];
+      }
+    }
+
+    3: {
+      file {
+        "${shared_dir}/public/system":
+          ensure  => directory,
+          require => File[$shared_dir],
+          group   => $user,
+          mode    => '0755',
+          owner   => $user;
+
+        "run-dir for ${user} of ${app_name}":
+          ensure  => directory,
+          path    => "${shared_dir}/tmp/pids",
+          owner   => $user,
+          group   => 'root',
+          mode    => '0755',
+          require => [ Package['cron'], Exec["mkdir environment for ${app_name}-${rails_env}"] ];
+
+        "${deploy_to}/repo":
+          ensure  => directory,
+          require => Exec["mkdir environment for ${app_name}-${rails_env}"],
+          group   => $user,
+          mode    => '0755',
+          owner   => $user;
       }
     }
   }
