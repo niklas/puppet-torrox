@@ -61,13 +61,6 @@ define rails::application(
       mode    => '0755',
       owner   => $user;
 
-    "${shared_dir}/system":
-      ensure  => directory,
-      require => File[$shared_dir],
-      group   => $user,
-      mode    => '0755',
-      owner   => $user;
-
     "${deploy_to}/releases":
       ensure  => directory,
       require => Exec["mkdir environment for ${app_name}-${rails_env}"],
@@ -105,14 +98,6 @@ define rails::application(
       replace => false,
       owner   => $user;
 
-    "run-dir for ${user} of ${app_name}":
-      ensure  => directory,
-      path    => "${shared_dir}/pids",
-      owner   => $user,
-      group   => 'root',
-      mode    => '0755',
-      require => [ Package['cron'], Exec["mkdir environment for ${app_name}-${rails_env}"] ];
-
     # create a dummy release so we can symlink it as document root for apache
     "${deploy_to}/releases/00000000000000":
       ensure  => directory,
@@ -136,6 +121,27 @@ define rails::application(
       mode    => '0755',
       replace => false,
       owner   => $user;
+  }
+
+  case $capistrano_version {
+    default,2: {
+      file {
+        "${shared_dir}/system":
+          ensure  => directory,
+          require => File[$shared_dir],
+          group   => $user,
+          mode    => '0755',
+          owner   => $user;
+
+        "run-dir for ${user} of ${app_name}":
+          ensure  => directory,
+          path    => "${shared_dir}/pids",
+          owner   => $user,
+          group   => 'root',
+          mode    => '0755',
+          require => [ Package['cron'], Exec["mkdir environment for ${app_name}-${rails_env}"] ];
+      }
+    }
   }
 
   if ($create_uploads) {
