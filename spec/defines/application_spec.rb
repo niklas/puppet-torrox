@@ -18,7 +18,7 @@ describe "rails::application" do
   it "configures logrotate" do
      should contain_package("logrotate").with_ensure("latest")
 
-     should contain_File("/etc/logrotate.d/testapp-production").
+     should contain_file("/etc/logrotate.d/testapp-production").
        with_ensure("present").
        with_group("root").
        with_owner("root").
@@ -30,7 +30,7 @@ describe "rails::application" do
        with_content(%r!testapp!).
        with_content(%r!/home/heinz/projects/testapp/production/shared/log/\*\.log!)
 
-     should contain_File("/home/heinz/projects/testapp/production/shared/log/rotated").
+     should contain_file("/home/heinz/projects/testapp/production/shared/log/rotated").
        with_ensure("directory").
        with_mode("0755")
   end
