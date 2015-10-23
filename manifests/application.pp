@@ -146,9 +146,16 @@ define rails::application(
 
     3: {
       file {
-        "${shared_dir}/public/system":
+        "${shared_dir}/public":
           ensure  => directory,
           require => File[$shared_dir],
+          group   => $user,
+          mode    => '0755',
+          owner   => $user;
+
+        "${shared_dir}/public/system":
+          ensure  => directory,
+          require => File["${shared_dir}/public"],
           group   => $user,
           mode    => '0755',
           owner   => $user;
