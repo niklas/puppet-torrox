@@ -5,4 +5,9 @@ class rails::webserver::base {
     require => Package['apache2'],
     notify  => Service['apache2']
   }
+
+  file { '/etc/apache2/conf.d':
+    ensure  => directory,
+    require => Package['apache2'],
+  }
 }
