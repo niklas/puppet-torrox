@@ -12,6 +12,7 @@ define rails::application(
   $app_name          = $name,
   $database          = "${name}_${rails_env}",
   $deploy_to         = "/home/${user}/projects/${name}/${rails_env}",
+  $manage_system_dir = true,
   $capistrano_version = 2,
 ) {
   $shared_dir = "${deploy_to}/shared"
@@ -126,21 +127,25 @@ define rails::application(
 
   case $capistrano_version {
     default,2: {
-      file {
-        "${shared_dir}/system":
-          ensure  => directory,
-          require => File[$shared_dir],
-          group   => $user,
-          mode    => '0755',
-          owner   => $user;
+      if $manage_system_dir == true {
+        file {
+          "${shared_dir}/system":
+            ensure  => directory,
+            require => File[$shared_dir],
+            group   => $user,
+            mode    => '0755',
+            owner   => $user,
+        }
+      }
 
+      file {
         "run-dir for ${user} of ${app_name}":
           ensure  => directory,
           path    => "${shared_dir}/pids",
           owner   => $user,
           group   => 'root',
           mode    => '0755',
-          require => [ Package['cron'], Exec["mkdir environment for ${app_name}-${rails_env}"] ];
+          require => [ Package['cron'], Exec["mkdir environment for ${app_name}-${rails_env}"] ],
       }
     }
 
@@ -151,15 +156,21 @@ define rails::application(
           require => File[$shared_dir],
           group   => $user,
           mode    => '0755',
-          owner   => $user;
+          owner   => $user,
+      }
 
-        "${shared_dir}/public/system":
-          ensure  => directory,
-          require => File["${shared_dir}/public"],
-          group   => $user,
-          mode    => '0755',
-          owner   => $user;
+      if $manage_system_dir == true {
+        file {
+          "${shared_dir}/public/system":
+            ensure  => directory,
+            require => File["${shared_dir}/public"],
+            group   => $user,
+            mode    => '0755',
+            owner   => $user,
+        }
+      }
 
+      file {
         "run-dir for ${user} of ${app_name}":
           ensure  => directory,
           path    => "${shared_dir}/tmp/pids",
